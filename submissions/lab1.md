@@ -224,3 +224,43 @@ HTTP_STATUS:503
 ## GitHub Community
 
 Starring repos matters because it is a small signal that people find the project useful. It also helps other people find good tools faster, and for maintainers it is a simple sign that someone is actually using the work.
+
+## Bonus Task
+
+I also checked resource usage in three cases: idle, normal load, and load with fault injection in `payments`.
+
+Idle:
+
+```text
+app-gateway-1    0.16%   41.17MiB / 15.35GiB   21.4kB / 21kB     3
+app-events-1     0.14%   40.53MiB / 15.35GiB   17.7kB / 18.4kB   2
+app-payments-1   0.16%   32.71MiB / 15.35GiB   3.5kB / 2.61kB    2
+app-postgres-1   0.42%   28.41MiB / 15.35GiB   59.5kB / 62.9kB   8
+app-redis-1      0.34%   4.062MiB / 15.35GiB   23.3kB / 9.28kB   6
+```
+
+Load:
+
+```text
+app-gateway-1    1.18%   42.3MiB / 15.35GiB    65.5kB / 65.1kB   3
+app-events-1     0.76%   42.08MiB / 15.35GiB   55.6kB / 68.1kB   2
+app-payments-1   0.14%   33.7MiB / 15.35GiB    4.23kB / 3.19kB   2
+app-postgres-1   0.17%   29.75MiB / 15.35GiB   79.4kB / 88.1kB   8
+app-redis-1      0.40%   4.879MiB / 15.35GiB   26.6kB / 10.6kB   6
+```
+
+Load with fault injection in `payments`:
+
+```text
+app-payments-1   0.17%   40.52MiB / 15.35GiB   2.91kB / 2.49kB   2
+app-gateway-1    0.91%   41.62MiB / 15.35GiB   197kB / 198kB     3
+app-events-1     0.59%   42.06MiB / 15.35GiB   171kB / 220kB     2
+app-postgres-1   0.17%   30.18MiB / 15.35GiB   141kB / 157kB     8
+app-redis-1      0.33%   5.309MiB / 15.35GiB   45.4kB / 18.5kB   6
+```
+
+The biggest memory users were `gateway` and `events` in normal runs. With fault injection, `payments` used more memory than before, but `events` was still the highest by a small margin.
+
+The highest CPU under load was `gateway`. That makes sense because every request goes through it first, and it has to wait for the other services too.
+
+With fault injection, the system got slower and the load generator started to show failures. In this short run I did not see a big memory jump in `gateway`, but slow `payments` still made the whole request path less stable.
