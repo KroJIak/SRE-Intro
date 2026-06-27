@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gateway
+  labels:
+    version: "v2"
 spec:
   replicas: 1
   selector:
@@ -11,11 +13,12 @@ spec:
     metadata:
       labels:
         app: gateway
+        version: "v2"
     spec:
       containers:
         - name: gateway
-          image: quickticket-gateway:v1
-          imagePullPolicy: Never
+          image: ghcr.io/krojiak/quickticket-gateway:6e23bf79c726ab9e6e73ffe02b70caabef9b6c2e
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
