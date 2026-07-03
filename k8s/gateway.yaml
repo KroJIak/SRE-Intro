@@ -53,7 +53,7 @@ spec:
             - name: PAYMENTS_URL
               value: "http://payments:8082"
             - name: GATEWAY_TIMEOUT_MS
-              value: "5000"
+              value: "7000"
           livenessProbe:
             httpGet:
               path: /health
