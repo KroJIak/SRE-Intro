@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: events
-          image: ghcr.io/krojiak/quickticket-events:a6067a821f94ea499503168631743723fea0ac69
+          image: ghcr.io/krojiak/quickticket-events:e25e4cbdb2ff4ff31cd9d55098a5c3e3855c0a98
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
