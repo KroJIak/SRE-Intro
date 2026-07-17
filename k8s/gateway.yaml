@@ -41,6 +41,14 @@ spec:
         app: gateway
         version: "v2"
     spec:
+      terminationGracePeriodSeconds: 40
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: gateway
       containers:
         - name: gateway
           image: ghcr.io/krojiak/quickticket-gateway:1a50f138a67883a5c092fadcb45ecdb28c1945cb
@@ -70,6 +78,10 @@ spec:
               value: "10"
             - name: BULKHEAD_PAYMENTS_TIMEOUT_S
               value: "0.5"
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 10"]
           livenessProbe:
             httpGet:
               path: /health
@@ -81,8 +93,8 @@ spec:
             httpGet:
               path: /health
               port: 8080
-            periodSeconds: 5
-            failureThreshold: 2
+            periodSeconds: 2
+            failureThreshold: 1
           resources:
             requests:
               cpu: 50m
