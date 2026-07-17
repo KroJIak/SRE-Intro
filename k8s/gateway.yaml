@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: ghcr.io/krojiak/quickticket-gateway:e25e4cbdb2ff4ff31cd9d55098a5c3e3855c0a98
+          image: ghcr.io/krojiak/quickticket-gateway:1a50f138a67883a5c092fadcb45ecdb28c1945cb
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
